@@ -1,0 +1,59 @@
+.favorites-modal {
+  width: 75%;
+  position: relative;
+  margin-top: 0px;
+  max-width: 900px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 10px 10px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  max-height: 80vh;
+  overflow-y: hidden;
+  display: none;
+  margin-top: 75px;
+  font-size: 1.5rem;
+}
+
+.favorites-modal h1 {
+  text-decoration: underline;
+  margin-top: 0px;
+
+}
+
+.fav-author {
+  text-align: right;
+}
+
+.fa-times {
+  font-size: 2rem;
+  position: absolute;
+  right: 20px;
+  top:20px;
+}
+
+.fa-times:hover {
+  cursor: pointer;
+  filter: brightness(80%)
+}
+
+.show-modal {
+  display: flex
+}
+
+.single-quote {
+  margin-bottom: 30px;
+}
+
+li {
+  list-style: none;
+}
+
+#quote-fav-list {
+  padding-bottom: 50px;
+}
+
+.quote-list {
+  height: 85%;
+  overflow-y: auto;
+}

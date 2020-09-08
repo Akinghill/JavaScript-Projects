@@ -11,3 +11,5 @@ Generate a new quote with a click of a button and also share the quote to Twitte
 -Icons from [Fontawesome](https://fontawesome.com/)
 
 -Quotes from [Forismatic API](http://api.forismatic.com/api/)
+
+-Button Effect [Nour Suad](https://codepen.io/nourabusoud/pen/ypZzMM)

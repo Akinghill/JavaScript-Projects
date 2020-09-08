@@ -1,19 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quote Machine</title>
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-    <link rel="manifest" href="/favicon/site.webmanifest" />
-    <!-- Styles -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"/>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quote Machine</title>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="/favicon/site.webmanifest" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css" />
+  <link rel="stylesheet" href="./styles/style.css">
+  <link rel="stylesheet" href="./styles/favorites-modal.css">
+  <link rel="stylesheet" href="./styles/bubbleButton.css">
+  <link rel="stylesheet" href="./styles/utils.css">
 </head>
+
 <body>
+  <!-- Option Buttons -->
+  <div class="option-buttons abs">
+    <i class="fas fa-ellipsis-h abs"></i>
+    <i class="fas fa-list" title="View Favorites" id="show-modal"></i>
+    <i class="fas fa-broom clean-favs" title="Remove Favorites"></i>
+  </div>
+  <!-- Show Favorite Quotes, Modal -->
+  <div class="favorites-modal" id="favs-modal">
+    <div class="modal-title">
+      <i class="fas fa-times" title="close" id="close-modal"></i>
+      <h1>Favorite Quotes</h1>
+      <div class="quote-list">
+        <ul id="quote-fav-list">
+        </ul>
+      </div>
+    </div>
+
+  </div>
   <div class="quote-container" id="quote-container">
     <!-- Quote -->
     <div class="quote-text">
@@ -30,8 +53,8 @@
         <button class="twitter-button" id="twitter" title="Tweet this!">
           <i class="fab fa-twitter"></i>
         </button>
-        <button class="favorite-button" id="favorite" title="Favorite this!">
-          <i class="fas fa-heart"></i>
+        <button class="favorite-button bubbly-button" id="favorite" title="Favorite this!">
+          <i class="fas fa-heart" aria-hidden="true"></i>
         </button>
       </div>
       <button id="new-quote">New Quote</button>
@@ -42,6 +65,9 @@
   <div class="loader" id="loader"></div>
 
   <!-- Script -->
-  <script src="script.js"></script>
+  <script src="./scripts/script.js"></script>
+  <script src="./scripts/modal.js"></script>
+  <script src="./scripts/bubbleButton.js"></script>
 </body>
+
 </html>
