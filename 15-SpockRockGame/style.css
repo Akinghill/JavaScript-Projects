@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Lato&display=swap");
 
+:root{
+  --theme1: dodgerblue;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -7,18 +11,26 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-
+  background-color: whitesmoke;
   font-family: Lato, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
+.game-container {
+  width: 540px;
+  height: 600px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0px 10px 20px -5 rgba(0, 0, 0, 0.5);
+}
 
 .header {
-  background: dodgerblue;
-
+  background: var(--theme1);
+  height: 100px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +55,25 @@ h2 {
   User-select: none;
 }
 
+#player .far,
+#player .choice {
+  color: var(--theme1);
+  cursor: pointer;
+}
 
+#computer .far,
+#computer .choice {
+  color: red; 
+}
+
+.selected {
+  color: gray !important;
+}
+
+#player .far:last-of-type,
+#computer .far:last-of-type {
+  margin-right: 0;
+}
 
 .reset-icon {
   font-size: 30px;
@@ -66,7 +96,7 @@ h2 {
 /* Media Query: Large Smartphone (Vertical) */
 @media screen and (max-width: 600px) {
   .game-container {
-
+    width: 95%;
     height: 580px;
   }
 
