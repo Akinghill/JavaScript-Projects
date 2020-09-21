@@ -7,19 +7,32 @@ const loader = document.querySelector('.loader');
 // Nasa API
 const count = 10
 const apiKey = 'eA2QQZIMQsyrQ03yR8JjSdg2WNxaiHT31rYbE6ud'
-const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&count=${count}`
+const demoKey = 'DEMO_KEY'
+
+const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${demoKey}&count=${count}`
 
 let resultsArray = []
+let favorites = {}
 
-function updateDOM() {
-  console.log('updating dom');
+function showContent(page) {
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  loader.classList.add('hidden');
+  if (page === 'result') {
+    resultsNav.classList.remove('hidden')
+    favoritesNav.classList.add('hidden')
+  } else {
+    favoritesNav.classList.remove('hidden')
+    resultsNav.classList.add('hidden')
+  }
+}
 
-  resultsArray.forEach((result, i) => {
-    console.log('making a pic:', i);
+function createDOMNodes(page) {
+  const currentArray = page === 'result' ? resultsArray : Object.values(favorites)
 
+  currentArray.forEach((result) => {
     // Card Container
     const card = document.createElement('div')
-    card.classList.add('add')
+    card.classList.add('card')
     // Link
     const link = document.createElement('a')
     link.href = result.hdurl
@@ -30,7 +43,7 @@ function updateDOM() {
     image.src = result.url
     image.alt = 'NASA Picturer of the Day'
     image.loading = 'lazy'
-    image.classList.add('card')
+    image.classList.add('card-img-top')
     // Card Body
     const cardBody = document.createElement('div')
     cardBody.classList.add('card-body')
@@ -41,7 +54,14 @@ function updateDOM() {
     // Save Text
     const saveText = document.createElement('p')
     saveText.classList.add('clickable')
-    saveText.textContent = 'Add To Favorites'
+    if (page === 'result') {
+      saveText.textContent = 'Add To Favorites'
+      saveText.setAttribute('onclick', `saveFavorite('${result.url}')`)
+    } else {
+      saveText.textContent = 'Remove Favorite'
+      saveText.setAttribute('onclick', `removeFavorite('${result.url}')`)
+    }
+    // saveText.onclick = `saveFavorite('${result.url}')`
     // Card Text
     const cardText = document.createElement('p')
     cardText.textContent = result.explanation
@@ -55,7 +75,6 @@ function updateDOM() {
     const copyrightResult = result.copyright === undefined ? '' : result.copyright;
     const copyright = document.createElement('span')
     copyright.textContent = ` ${copyrightResult}`
-    console.log(card);
     // Append
     footer.append(date, copyright)
     cardBody.append(cardTitle, saveText, cardText, footer)
@@ -65,16 +84,53 @@ function updateDOM() {
   })
 }
 
+// Add result to favorites
+function saveFavorite(itemUrl) {
+  // Loop through results array to select favorite
+  resultsArray.forEach((item) => {
+    if (item.url.includes(itemUrl) && !favorites[itemUrl]) {
+      favorites[itemUrl] = item
+      // Show saved confirmation for 2 seconds
+      saveConfirmed.hidden = false
+      setTimeout(() => {
+        saveConfirmed.hidden = true
+      }, 2000)
+      // Set Favorites in localStorage
+      localStorage.setItem('nasaFavorites', JSON.stringify(favorites))
+    }
+  })
+}
+
+// Remove Favorite 
+function removeFavorite(itemUrl) {
+  if (favorites[itemUrl]) {
+    delete favorites[itemUrl]
+    // Set Favorites in localStorage
+    localStorage.setItem('nasaFavorites', JSON.stringify(favorites))
+    updateDOM('favorites')
+  }
+}
+
+function updateDOM(page) {
+  // Get favorites from localStorage
+  if (localStorage.getItem('nasaFavorites')) {
+    favorites = JSON.parse(localStorage.getItem('nasaFavorites'))
+  }
+  imagesContainer.textContent = ''
+  createDOMNodes(page)
+  showContent(page)
+}
+
 // Get 10 Images from NASA API
 async function getNasaPictures() {
+  // Show Loader
+  loader.classList.remove('hidden')
   try {
-    console.log('getting nasa pics');
     const response = await fetch(apiUrl)
     resultsArray = await response.json()
-    console.log(resultsArray);
-    updateDOM()
+    updateDOM('result')
   } catch (error) {
-    console.log('unable to get pics');
+    console.log('unable to get pictures');
   }
 }
 
