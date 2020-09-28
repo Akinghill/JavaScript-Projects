@@ -1,4 +1,4 @@
-# Repo of little JavaScript projects
+# Repo of JavaScript projects
 
 ## Project Index
 
