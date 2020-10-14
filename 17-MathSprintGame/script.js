@@ -21,6 +21,8 @@ const playAgainBtn = document.querySelector('.play-again');
 // Equations
 let questionAmount = 0;
 let equationsArray = [];
+let playerGuessArray = [];
+let bestScoreArray = []
 
 // Game Page
 let firstNumber = 0;
@@ -29,8 +31,132 @@ let equationObject = {};
 const wrongFormat = [];
 
 // Time
+let timer;
+let timePlayed = 0;
+let baseTime = 0;
+let penaltyTime = 0;
+let finalTime = 0;
+let finalTimeDisplay = '0.0'
+
+// Stop Timer, Process Results, go to Score Page
+function checkTime() {
+  if (playerGuessArray.length == questionAmount) {
+    clearInterval(timer)
+    let amountWrong = playerGuessArray.length - playerGuessArray.filter((e, i) => {
+      return e == equationsArray[i].evaluated
+    }).length
+    finalTime = timePlayed + penaltyTime
+    penaltyTime = amountWrong * .5
+    scoresToDOM()
+  }
+}
 
 // Scroll
+let valueY = 0;
+
+// Refresh Splash Page Best Scores
+function bestScoresToDOM(){
+  bestScores.forEach((bestScore, i) => {
+    const bestScoreEl = bestScore
+    bestScoreEl.textContent = `${bestScoreArray[i].bestScore}s`
+  })
+}
+
+// Check Local Storage for Best Scores, set bestScoresArray
+function getSavedBestScores() {
+  if (localStorage.getItem('bestScores')) {
+    bestScoreArray = JSON.parse(localStorage.bestScores)
+  } else {
+    bestScoreArray = [
+      { questions: 10, bestScore: finalTimeDisplay},
+      { questions: 25, bestScore: finalTimeDisplay},
+      { questions: 50, bestScore: finalTimeDisplay},
+      { questions: 99, bestScore: finalTimeDisplay}
+    ]
+    localStorage.setItem('bestScores', JSON.stringify(bestScoreArray))
+  }
+  bestScoresToDOM()
+}
+
+// Update Best Scores Array
+function updateBestScore(){
+  bestScoreArray.forEach((score, index) => {
+    if(questionAmount == score.questions){
+      // Return Best Score as Number with one Decimal
+      const savedBestScore = Number(bestScoreArray[index].bestScore)
+      // Update if new final score is less or rerplacing 0
+      if (savedBestScore === 0 || savedBestScore > finalTime) {
+        bestScoreArray[index].bestScore = finalTimeDisplay;
+      }
+    }
+  })
+  // Update spash Page
+  bestScoresToDOM()
+  // Save to Local Storage
+  localStorage.setItem('bestScores', JSON.stringify(bestScoreArray))
+
+}
+
+// Reset Game
+function playAgain() {
+  gamePage.addEventListener('click', startTimer);
+  scorePage.hidden = true;
+  splashPage.hidden = false;
+  equationsArray = [];
+  playerGuessArray = [];
+  valueY = 0;
+  playAgainBtn.hidden = true;
+}
+
+// Show Score Page
+function showScorePage() {
+  // Show Play Again button after 1 second
+  setTimeout(() => {
+    playAgainBtn.hidden = false
+  }, 1000);
+  gamePage.hidden = true
+  scorePage.hidden = false
+}
+
+// Format & Display Time In DOM
+function scoresToDOM() {
+  finalTimeDisplay = finalTime.toFixed(1)
+  baseTime = timePlayed.toFixed(1)
+  penaltyTime = penaltyTime.toFixed(1)
+  baseTimeEl.textContent = `Base Time: ${baseTime}s`
+  penaltyTimeEl.textContent = `Penalty Time: +${penaltyTime}s`
+  finalTimeEl.textContent = `${finalTimeDisplay}s`
+  updateBestScore()
+  // Scroll to the top, go to score page
+  itemContainer.scrollTo({ top: 0, behavior: 'instant' })
+  showScorePage()
+}
+
+// Add a tenth of a second to timePlayed
+function addTime() {
+  timePlayed += 0.1;
+  checkTime()
+}
+
+// Start timer when game page is clicked
+function startTimer() {
+  // Reset times
+  timePlayed = 0;
+  penaltyTime = 0;
+  finalTime = 0;
+  timer = setInterval(addTime, 100);
+  gamePage.removeEventListener('click', startTimer)
+}
+
+// Scroll and Store Player Guess In Array
+function select(guessedTrue) {
+  console.log(playerGuessArray)
+  // Scroll 80 Pixels
+  valueY += 80;
+  itemContainer.scroll(0, valueY)
+  // Add player guess to array
+  return guessedTrue ? playerGuessArray.push('true') : playerGuessArray.push('false')
+}
 
 // Displays Game Page
 function showGamePage() {
@@ -75,7 +201,7 @@ function createEquations() {
 }
 
 // Add Equations to DOM
-function equationsToDOM(){
+function equationsToDOM() {
   equationsArray.forEach((equation) => {
     // Item
     const item = document.createElement('div')
@@ -112,7 +238,7 @@ function populateGamePage() {
 }
 
 // Run count down
-function countdownStart(){
+function countdownStart() {
   countdown.textContent = '3'
   setTimeout(() => {
     countdown.textContent = '2'
@@ -126,12 +252,12 @@ function countdownStart(){
 }
 
 // Show Count Down 
-function showCountdown(){
+function showCountdown() {
   splashPage.hidden = true
   countdownPage.hidden = false
   countdownStart()
   populateGamePage()
-  setTimeout(showGamePage, 400)
+  setTimeout(showGamePage, 4000)
 }
 
 // Get value from selected radio button
@@ -149,8 +275,7 @@ function getRadioValue() {
 function selectQuestionAmount(e) {
   e.preventDefault()
   questionAmount = getRadioValue()
-  console.log('question amount ', questionAmount);
-  if (questionAmount){
+  if (questionAmount) {
     showCountdown()
   }
 }
@@ -167,3 +292,7 @@ startForm.addEventListener('click', () => {
 })
 
 startForm.addEventListener('submit', selectQuestionAmount)
+gamePage.addEventListener('click', startTimer)
+
+// On Load
+getSavedBestScores();
