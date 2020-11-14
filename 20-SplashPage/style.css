@@ -1,0 +1,19 @@
+
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  font-family: sans-serif;
+  
+}
+
+.wrapper {
+  position: relative;
+  width: 1440px;
+  min-height: 100vh;
+  margin: auto;
+}
